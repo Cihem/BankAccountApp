@@ -10,8 +10,14 @@ class Bank extends Component {
         this.state = { amount: 0, name: "", itemList: [
             {amount: 250, name: "Salary"},
             {amount: 176, name: "Salary"},
-            {amount: -61, name: "Groceries"}
-        ] };
+            {amount: -61, name: "Groceries"},
+            {amount: -13, name: "Groceries"},
+            {amount: -17, name: "Groceries"},
+            {amount: -33, name: "Books"},
+            {amount: -10, name: "Bread"},
+        ],
+        search: ""
+     };
     }
 
     changeItem = (e) => {
@@ -36,19 +42,25 @@ class Bank extends Component {
       }
 
       income = () => {
-         return this.state.itemList
+         return this.filteredItems()
          .filter(e => e.amount > 0)
          .reduce((a,b) => a + b.amount, 0)
       }
 
       outcome = () => {
-        return this.state.itemList
+        return this.filteredItems()
         .filter(e => e.amount < 0)
         .reduce((a,b) => a + b.amount, 0)
      }
 
      balance = () => {
         return this.income() + this.outcome()
+     }
+
+     filteredItems = () => {
+         return this.state.itemList.filter((e) => 
+            e.name.toLowerCase().includes(this.state.search.toLowerCase()))
+
      }
 
     render() {
@@ -80,6 +92,7 @@ class Bank extends Component {
                </div>
                </div>
 
+
                
                
                <div className="row mt-4">
@@ -107,18 +120,26 @@ class Bank extends Component {
 
             </div>
             </div>
+            </div>
 
-        
-             </div>
-
-            {/* </div> */}
+              <div className="mt-4">
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  placeholder="Type to search"
+                  value={this.state.search}
+                  onChange={this.changeItem}
+                  name="search"
+                  />
+            </div>
+         
 
                <ul className="mt-4 list-group">
                    {
-                       this.state.itemList.map((item, index) => ( 
+                       this.filteredItems().map((item, index) => ( 
                        <li key={index} className="list-group-item d-flex justify-content-between">
                            <strong>{item.name}</strong> 
-                           <span>{item.amount}</span>
+                           <span><ColorNumber number={item.amount} /></span>
                            </li>
                     
                        ))
